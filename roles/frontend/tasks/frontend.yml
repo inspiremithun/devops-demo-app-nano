@@ -1,0 +1,42 @@
+---
+  - name: create directory if they don't exist
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: root
+      group: root
+      mode: 0777
+    with_items:
+      - /opt/app/release/devops-demo-app-1.0
+      - /opt/app/release/devops-demo-app-1.1
+  - name: release package from github
+    unarchive:
+      src: https://github.com/devopsdemoapps/devops-demo-app/archive/1.0.tar.gz
+      dest: /opt/app/release/devops-demo-app-1.0
+      extra_opts: [--strip-components=1]
+      remote_src: yes
+      
+  - name: release package from github
+    unarchive:
+      src: https://github.com/devopsdemoapps/devops-demo-app/archive/1.1.tar.gz
+      dest: /opt/app/release/devops-demo-app-1.1
+      extra_opts: [--strip-components=1]
+      remote_src: yes  
+      
+  - name: Create symlink
+    file:
+      src: /opt/app/release/devops-demo-app-1.0
+      dest: /var/www/html/app
+      mode: 0777
+      state: link
+      force: yes
+      
+  - name: Create symlink 2
+    file:
+      src: /opt/app/release/devops-demo-app-1.1
+      dest: /var/www/html/app
+      mode: 0777
+      state: link
+      force: yes      
+
+...
